@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class SwitchController : MonoBehaviour
 {
-	[SerializeField] private int id = 0;
+	[SerializeField] private int _id = 0;
 
 	private bool isOn = false;
   	private bool canInteract = false;
+
 	private void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player") {
 			canInteract = true;
@@ -25,8 +26,7 @@ public class SwitchController : MonoBehaviour
 			isOn = !isOn;
 			transform.rotation = Quaternion.Euler(isOn ? new Vector3(180, 0, 180) : new Vector3(180, 0, 0));
 			Debug.Log("interact");
+			LightsOnEvents.SwitchPressed?.Invoke(_id, isOn);
 		}
 	}
-
-
 }

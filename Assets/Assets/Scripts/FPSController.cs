@@ -38,12 +38,9 @@ public class FPSController : MonoBehaviour
 		if (_characterController.isGrounded)
 		{
 			move = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
-			if (Input.GetKeyDown(KeyCode.LeftShift))
-			{
+			if (Input.GetKeyDown(KeyCode.LeftShift)) {
 				move = transform.TransformDirection(move) * _runSpeed;
-			}
-			else
-			{
+			} else {
 				move = transform.TransformDirection(move) * _walkSpeed;
 			}
 		}

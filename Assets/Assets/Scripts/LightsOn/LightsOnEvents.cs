@@ -7,4 +7,6 @@ public static class LightsOnEvents
 	public static void RaiseShowInteractMessage(bool show, string message = null) {
 		OnShowInteractMessage?.Invoke(show, message);
 	}
+
+	public static System.Action<int, bool> SwitchPressed;
 }
