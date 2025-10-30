@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class LightsOnManager : MonoBehaviour
@@ -5,6 +6,7 @@ public class LightsOnManager : MonoBehaviour
 	[Header("LightBulb Room")]
 	[SerializeField] private Transform _smoke;
 	[SerializeField] private Transform _light;
+	[SerializeField] private TextMeshPro[] _tntTimer;
 
 	private int _answerId = 0;
 	private int[] _toggleIds = { 1 , 2, 3 };
@@ -12,6 +14,7 @@ public class LightsOnManager : MonoBehaviour
 	private bool[] _toggleOn = { false, false, false };
 	private bool _cheatSolution = false;
 	private bool _FinalQuest = false;
+	private float _timer = 60;
 
 	private void Awake() {
 		LightsOnEvents.SwitchPressed += SwitchPressed;
@@ -25,6 +28,15 @@ public class LightsOnManager : MonoBehaviour
 
 	private void Update() {
 		CheckSwitches();
+		if (_timer >= 0) {
+			_timer -= Time.deltaTime;
+			foreach (var timerText in _tntTimer) {
+				timerText.text = System.String.Format("00:{0}",Mathf.Ceil(_timer).ToString());
+			}
+		} else {
+			//Lose
+			Debug.Log("Derrota");
+		}
 	}
 
 	public void SwitchPressed(int Id, bool isOn) {

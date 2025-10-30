@@ -14,16 +14,6 @@ public class LigthsOnCanvasManager : MonoBehaviour
 		_interactMessage.gameObject.SetActive(false);
 	}
 
-	private void Update() {
-		if (_realSeconds >= 0) {
-            _realSeconds -= Time.deltaTime;
-			_Seconds.text = Mathf.Ceil(_realSeconds).ToString();
-        } else {
-			//Lose
-			Debug.Log("Derrota");
-		}
-	}
-
 	private void ShowInteractMessage(bool show, string message) {
 		_interactMessage.gameObject.SetActive(show);
 		if (!show) {
