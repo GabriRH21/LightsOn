@@ -1238,7 +1238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2777c98126f0204f8eae260b378cfa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: 0
+  _id: 1
 --- !u!1 &474382102 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ae3a9407b44c45b41af09943a8a5404b, type: 3}
@@ -1295,7 +1295,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -6151747068533630916, guid: ae3a9407b44c45b41af09943a8a5404b, type: 3}
 --- !u!114 &474382108
@@ -8670,7 +8670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2777c98126f0204f8eae260b378cfa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: 0
+  _id: 3
 --- !u!1001 &1794967333
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9667,7 +9667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2777c98126f0204f8eae260b378cfa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: 0
+  _id: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -7,16 +7,18 @@ public class LightsOnManager : MonoBehaviour
 	[SerializeField] private Transform _light;
 
 	private int _answerId = 0;
-	private int[] _switchsIds = { 1 , 2, 3 };
-	private float[] _switchsOnTime = { 0f, 0f, 0f };
-	private bool[] _switchsOn = { false, false, false };
+	private int[] _toggleIds = { 1 , 2, 3 };
+	private float[] _toggleOnTime = { 0f, 0f, 0f };
+	private bool[] _toggleOn = { false, false, false };
+	private bool _cheatSolution = false;
 
 	private void Awake() {
 		LightsOnEvents.SwitchPressed += SwitchPressed;
 		LightsOnEvents.PrepareSolution += PrepareSolution;
-		_answerId = _switchsIds[UnityEngine.Random.Range(0, _switchsIds.Length)];
+		_answerId = _toggleIds[UnityEngine.Random.Range(0, _toggleIds.Length)];
 		_light.gameObject.SetActive(false);
 		_smoke.gameObject.SetActive(false);
+		Debug.Log(_answerId);
 	}
 
 	private void Update() {
@@ -25,53 +27,92 @@ public class LightsOnManager : MonoBehaviour
 
 	public void SwitchPressed(int Id, bool isOn) {
 		try {
-			_switchsOn[Id - 1] = isOn;
+			_toggleOn[Id - 1] = isOn;
 		} catch (System.Exception e) {
 			Debug.LogError(e);
 		}
 	}
 
 	private void CheckSwitches() {
-		for (int i = 0; i < _switchsOn.Length; i++) {
-			if (_switchsOn[i] && _switchsOnTime[i] < 5) {
-				_switchsOnTime[i] += Time.deltaTime;
+		for (int i = 0; i < _toggleOn.Length; i++) {
+			if (_toggleOn[i] && _toggleOnTime[i] < 5) {
+				_toggleOnTime[i] += Time.deltaTime;
 			} 
-			if (!_switchsOn[i] && _switchsOnTime[i] < 5 && _switchsOnTime[i] > 0) {
-				_switchsOnTime[i] -= Time.deltaTime;
+			if (!_toggleOn[i] && _toggleOnTime[i] < 5 && _toggleOnTime[i] > 0) {
+				_toggleOnTime[i] -= Time.deltaTime;
 			}
 		}
 	}
 
 	private void PrepareSolution() {
-		if (SwitchesOn() == 1) {
-            if (_switchsIds[0] == _answerId) {
-				if (_switchsOn[0]) {
+		switch (SwitchesOn()) {
+			case 0:
+				CheckIfSomeToggleWasOn();
+				_cheatSolution = true;
+				break;
+			case 1:
+				_cheatSolution = !CouldBeCorrect();
+				break;
+			case 2:
+				_light.gameObject.SetActive(true);
+				_cheatSolution = true;
+				break;
+			default: 
+				_light.gameObject.SetActive(true);
+				_cheatSolution = true;
+				break;
+		}
+	}
+
+	private bool CouldBeCorrect() {
+		if (WasOtherTogglePressed()) {
+			if (_toggleIds[0] == _answerId) {
+				if (_toggleOn[0]) {
 					_light.gameObject.SetActive(true);
-				} else if (((_switchsOnTime[0] < 5 && _switchsOnTime[1] >= 5) || (_switchsOnTime[0] >= 5 && _switchsOnTime[1] < 5)) || 
-							((_switchsOnTime[0] < 5 && _switchsOnTime[2] >= 5) || (_switchsOnTime[0] >= 5 && _switchsOnTime[2] < 5))) {
+					return true;
+				} else if (((_toggleOnTime[0] < 5 && _toggleOnTime[1] >= 5) || (_toggleOnTime[0] >= 5 && _toggleOnTime[1] < 5)) || 
+							((_toggleOnTime[0] < 5 && _toggleOnTime[2] >= 5) || (_toggleOnTime[0] >= 5 && _toggleOnTime[2] < 5))) {
 					_smoke.gameObject.SetActive(true);
+					return true;
 				}
-            } else if (_switchsIds[1] == _answerId) {
-				if (_switchsOn[1]) {
+			} else if (_toggleIds[1] == _answerId) {
+				if (_toggleOn[1]) {
 					_light.gameObject.SetActive(true);
-				} else if (((_switchsOnTime[1] < 5 && _switchsOnTime[0] >= 5) || (_switchsOnTime[1] >= 5 && _switchsOnTime[0] < 5)) || 
-							((_switchsOnTime[1] < 5 && _switchsOnTime[2] >= 5) || (_switchsOnTime[1] >= 5 && _switchsOnTime[2] < 5))) {
+					return true;
+				} else if (((_toggleOnTime[1] < 5 && _toggleOnTime[0] >= 5) || (_toggleOnTime[1] >= 5 && _toggleOnTime[0] < 5)) || 
+							((_toggleOnTime[1] < 5 && _toggleOnTime[2] >= 5) || (_toggleOnTime[1] >= 5 && _toggleOnTime[2] < 5))) {
 					_smoke.gameObject.SetActive(true);
+					return true;
 				}
 			} else {
-				if (_switchsOn[2]) {
+				if (_toggleOn[2]) {
 					_light.gameObject.SetActive(true);
-				} else if (((_switchsOnTime[2] < 5 && _switchsOnTime[0] >= 5) || (_switchsOnTime[2] >= 5 && _switchsOnTime[0] < 5)) || 
-							((_switchsOnTime[2] < 5 && _switchsOnTime[1] >= 5) || (_switchsOnTime[2] >= 5 && _switchsOnTime[1] < 5))) {
+					return true;
+				} else if (((_toggleOnTime[2] < 5 && _toggleOnTime[0] >= 5) || (_toggleOnTime[2] >= 5 && _toggleOnTime[0] < 5)) || 
+							((_toggleOnTime[2] < 5 && _toggleOnTime[1] >= 5) || (_toggleOnTime[2] >= 5 && _toggleOnTime[1] < 5))) {
 					_smoke.gameObject.SetActive(true);
+					return true;
 				}
 			}
-        }
+		}
+		return false;
+	}
+
+	private void CheckIfSomeToggleWasOn() {
+		int wasOn = 0;
+		foreach (var toggleTimer in _toggleOnTime) {
+			if (toggleTimer >= 5) {
+				wasOn++;
+			}
+		}
+		if (wasOn == 2 || wasOn == 3) {
+			_smoke.gameObject.SetActive(true);
+		}
 	}
 	
 	private int SwitchesOn() {
 		int result = 0;
-		foreach (var toggle in _switchsOn) {
+		foreach (var toggle in _toggleOn) {
 			if (toggle) {
 				result++;
 			}
@@ -79,14 +120,26 @@ public class LightsOnManager : MonoBehaviour
 		return result;
 	}
 
+	private bool WasOtherTogglePressed() {
+		int toggleOn = GetUniqueToggleOn();
+		for (int i = 0; i < _toggleOnTime.Length; i++) {
+			if (i != toggleOn) {
+				if (_toggleOnTime[i] >= 5) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	private int GetUniqueToggleOn()  {
 		int i = 0;
-        foreach (var toggle in _switchsOn) {
+		foreach (var toggle in _toggleOn) {
 			if (toggle) {
 				return i;
 			}
 			i++;
 		}
 		return i;
-    }
+	}
 } 
