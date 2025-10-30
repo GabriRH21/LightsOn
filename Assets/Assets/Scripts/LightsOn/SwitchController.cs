@@ -5,7 +5,7 @@ public class SwitchController : MonoBehaviour
 	[SerializeField] private int _id = 0;
 
 	private bool isOn = false;
-  	private bool canInteract = false;
+	private bool canInteract = false;
 
 	private void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player") {

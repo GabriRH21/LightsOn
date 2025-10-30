@@ -1462,6 +1462,7 @@ GameObject:
   m_Component:
   - component: {fileID: 551394889}
   - component: {fileID: 551394890}
+  - component: {fileID: 551394891}
   m_Layer: 0
   m_Name: SceneManager
   m_TagString: Untagged
@@ -1497,6 +1498,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interactMessage: {fileID: 1567535414}
+--- !u!114 &551394891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 551394888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbfbf57796ed49418df0cfed406073c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _smoke: {fileID: 985239334}
+  _light: {fileID: 1469581152}
 --- !u!1 &560454005
 GameObject:
   m_ObjectHideFlags: 0
@@ -8316,7 +8331,7 @@ Transform:
   m_GameObject: {fileID: 1658826850}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.55, z: -5.24}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9659,6 +9674,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 607287176}
   - {fileID: 176950948}
-  - {fileID: 1658826853}
   - {fileID: 551394889}
+  - {fileID: 1658826853}
   - {fileID: 97635523}
