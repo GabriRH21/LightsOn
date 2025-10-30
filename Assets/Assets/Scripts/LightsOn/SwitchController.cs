@@ -24,7 +24,7 @@ public class SwitchController : MonoBehaviour
 	private void Update() {
 		if (canInteract && Input.GetKeyDown(KeyCode.E)) {
 			isOn = !isOn;
-			transform.rotation = Quaternion.Euler(isOn ? new Vector3(180, 0, 180) : new Vector3(180, 0, 0));
+			transform.Rotate(0f, 0f, 180f);
 			//Debug.Log("interact");
 			LightsOnEvents.SwitchPressed?.Invoke(_id, isOn);
 		}

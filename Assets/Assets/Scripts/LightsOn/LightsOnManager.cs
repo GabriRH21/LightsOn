@@ -23,7 +23,6 @@ public class LightsOnManager : MonoBehaviour
 		_answerId = _toggleIds[UnityEngine.Random.Range(0, _toggleIds.Length)];
 		_light.gameObject.SetActive(false);
 		_smoke.gameObject.SetActive(false);
-		Debug.Log(_answerId);
 	}
 
 	private void Update() {
@@ -47,7 +46,7 @@ public class LightsOnManager : MonoBehaviour
 				Debug.LogError(e);
 			}
 		} else {
-			if (Id == _answerId) {
+			if (Id == _answerId && !_cheatSolution) {
 				Debug.Log("Victoria");
 			} else {
 				Debug.Log("Derrota");
