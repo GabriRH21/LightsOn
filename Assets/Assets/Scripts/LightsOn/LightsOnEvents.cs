@@ -11,4 +11,5 @@ public static class LightsOnEvents
 	public static System.Action<int, bool> SwitchPressed;
 
 	public static System.Action PrepareSolution;
+	public static System.Action FinalQuest;
 }

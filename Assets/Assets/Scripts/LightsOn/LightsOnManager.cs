@@ -11,10 +11,12 @@ public class LightsOnManager : MonoBehaviour
 	private float[] _toggleOnTime = { 0f, 0f, 0f };
 	private bool[] _toggleOn = { false, false, false };
 	private bool _cheatSolution = false;
+	private bool _FinalQuest = false;
 
 	private void Awake() {
 		LightsOnEvents.SwitchPressed += SwitchPressed;
 		LightsOnEvents.PrepareSolution += PrepareSolution;
+		LightsOnEvents.FinalQuest += ActivateFinalSelection;
 		_answerId = _toggleIds[UnityEngine.Random.Range(0, _toggleIds.Length)];
 		_light.gameObject.SetActive(false);
 		_smoke.gameObject.SetActive(false);
@@ -26,10 +28,18 @@ public class LightsOnManager : MonoBehaviour
 	}
 
 	public void SwitchPressed(int Id, bool isOn) {
-		try {
-			_toggleOn[Id - 1] = isOn;
-		} catch (System.Exception e) {
-			Debug.LogError(e);
+		if (!_FinalQuest) {
+			try {
+				_toggleOn[Id - 1] = isOn;
+			} catch (System.Exception e) {
+				Debug.LogError(e);
+			}
+		} else {
+			if (Id == _answerId) {
+				Debug.Log("Victoria");
+			} else {
+				Debug.Log("Derrota");
+			}
 		}
 	}
 
@@ -141,5 +151,9 @@ public class LightsOnManager : MonoBehaviour
 			i++;
 		}
 		return i;
+	}
+
+	private void ActivateFinalSelection() {
+		_FinalQuest = true;
 	}
 } 

@@ -24,13 +24,15 @@ public class DoorController : MonoBehaviour
 
 	private void Update() {
 		if (_canInteract && Input.GetKeyDown(KeyCode.E)) {
-			_door.transform.rotation = Quaternion.Euler( new Vector3(0, 100, 0) );
+			_door.transform.Rotate(0f, 100f, 0f);
 			LightsOnEvents.PrepareSolution?.Invoke();
 			_openedBefore = true;
+			_canInteract = false;
+			LightsOnEvents.RaiseShowInteractMessage(false);
 		}
 	}
 
 	public void CloseDoor() {
-		_door.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+		_door.transform.Rotate(0f, -100f, 0f);;
 	}
 }
