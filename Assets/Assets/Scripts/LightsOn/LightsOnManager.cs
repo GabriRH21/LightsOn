@@ -19,6 +19,7 @@ public class LightsOnManager : MonoBehaviour
 	[Header("Settings/General")]
 	[SerializeField] private Volume _cameraVolume;
 	[SerializeField] private FPSController _characterController;
+	[SerializeField] private 
 
 	private int _answerId = 0;
 	private int[] _toggleIds = { 1 , 2, 3 };
@@ -45,7 +46,7 @@ public class LightsOnManager : MonoBehaviour
 
 	private void FixedUpdate() {
 		CheckSwitches();
-		if (_timer >= 0) {
+		if (_timer >= 55) {
 			_timer -= Time.deltaTime;
 			foreach (var timerText in _tntTimer) {
 				timerText.text = System.String.Format("00:{0}",Mathf.Ceil(_timer).ToString());
@@ -189,7 +190,7 @@ public class LightsOnManager : MonoBehaviour
 #region Death
 
 	private void Death() {
-		_characterController.enabled = false;
+		_characterController.Death();
 		StartCoroutine(Explosion());
 		StartCoroutine(CameraEffects());
 	}
@@ -245,6 +246,8 @@ public class LightsOnManager : MonoBehaviour
 		}
 		dof.focalLength.value = focalEnd;
 		colorAdj.colorFilter.value = colorEnd;
+		yield return new WaitForSeconds(1.5f);
+		// ToDo: Change Scene to loser one
 	}
 #endregion
 } 

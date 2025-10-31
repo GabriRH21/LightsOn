@@ -6,8 +6,6 @@ public class LigthsOnCanvasManager : MonoBehaviour
 	[Header("UI")] 
 	[SerializeField] private TextMeshProUGUI _interactMessage;
 
-	private float _realSeconds = 60;
-
 	private void Awake() {
 		LightsOnEvents.OnShowInteractMessage += ShowInteractMessage;
 		_interactMessage.gameObject.SetActive(false);

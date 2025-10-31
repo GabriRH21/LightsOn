@@ -20,6 +20,10 @@ public class FPSController : MonoBehaviour
 	[SerializeField] private float _mouseVertical = 2.0f;
 	[SerializeField] private float _minRotation = -65.0f;
 	[SerializeField] private float _maxRotation = 60.0f;
+
+	[Space]
+	[Header("Others")]
+	[SerializeField] private Rigidbody _rb;
 	private float _hMouse, _vMouse;
 	
 
@@ -47,5 +51,10 @@ public class FPSController : MonoBehaviour
 
 		move.y -= _gravity * Time.deltaTime;
 		_characterController.Move(move * Time.deltaTime);
+	}
+
+	public void Death() {
+		_rb.constraints = RigidbodyConstraints.None;
+		this.enabled = false;
 	}
 }
