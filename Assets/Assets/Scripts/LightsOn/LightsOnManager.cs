@@ -1,14 +1,24 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class LightsOnManager : MonoBehaviour
 {
 	[Header("LightBulb Room")]
 	[SerializeField] private Transform _smoke;
 	[SerializeField] private Transform _light;
+	
+	[Space]
+	[Header("Explosions")]
 	[SerializeField] private TextMeshPro[] _tntTimer;
 	[SerializeField] private Transform[] _explosionEffects;
+	
+	[Space]
+	[Header("Settings/General")]
+	[SerializeField] private Volume _cameraVolume;
+	[SerializeField] private FPSController _characterController;
 
 	private int _answerId = 0;
 	private int[] _toggleIds = { 1 , 2, 3 };
@@ -24,23 +34,25 @@ public class LightsOnManager : MonoBehaviour
 		LightsOnEvents.PrepareSolution += PrepareSolution;
 		LightsOnEvents.FinalQuest += ActivateFinalSelection;
 		_answerId = _toggleIds[UnityEngine.Random.Range(0, _toggleIds.Length)];
+
 		_light.gameObject.SetActive(false);
 		_smoke.gameObject.SetActive(false);
 		foreach(var exp in _explosionEffects) {
 			exp.gameObject.SetActive(false);
 		}
+		_cameraVolume.gameObject.SetActive(false);
 	}
 
 	private void FixedUpdate() {
 		CheckSwitches();
-		if (_timer >= 50) {
+		if (_timer >= 0) {
 			_timer -= Time.deltaTime;
 			foreach (var timerText in _tntTimer) {
 				timerText.text = System.String.Format("00:{0}",Mathf.Ceil(_timer).ToString());
 			}
 		} else if (!_endGame){
 			_endGame = true;
-			StartCoroutine(Explosion());
+			Death();
 		}
 	}
 
@@ -55,7 +67,7 @@ public class LightsOnManager : MonoBehaviour
 			if (Id == _answerId && !_cheatSolution) {
 				Debug.Log("Victoria");
 			} else {
-				StartCoroutine(Explosion());
+				Death();
 			}
 		}
 	}
@@ -174,10 +186,65 @@ public class LightsOnManager : MonoBehaviour
 		_FinalQuest = true;
 	}
 
+#region Death
+
+	private void Death() {
+		_characterController.enabled = false;
+		StartCoroutine(Explosion());
+		StartCoroutine(CameraEffects());
+	}
 	private IEnumerator Explosion() {
 		foreach(var exp in _explosionEffects) {
 			exp.gameObject.SetActive(true);
 			yield return new WaitForSeconds(0.1f);
 		}
 	}
+
+	private IEnumerator CameraEffects() {
+		_cameraVolume.gameObject.SetActive(true);
+		
+		DepthOfField dof;
+		ColorAdjustments colorAdj;
+
+		_cameraVolume.profile.TryGet(out dof);
+		_cameraVolume.profile.TryGet(out colorAdj);
+
+		float totalDuration = 2f;
+		float halfDuration = totalDuration * 0.5f;
+
+		float focalStart   = 50f;
+		float focalMid     = 125f;
+		float focalEnd     = 200f;
+
+		Color colorStart = Color.white;
+		Color colorMid   = new Color(0.6f, 0.05f, 0.05f, 1f);
+		Color colorEnd   = Color.black;
+
+		float elapsed = 0f;
+		while (elapsed < totalDuration)
+		{
+			elapsed += Time.deltaTime;
+			if (elapsed > totalDuration) {
+				elapsed = totalDuration;
+			} 
+			if (elapsed <= halfDuration) {
+				float t1 = elapsed / halfDuration;
+
+				dof.focalLength.value = Mathf.Lerp(focalStart, focalMid, t1);
+
+				colorAdj.colorFilter.value = Color.Lerp(colorStart, colorMid, t1);
+			} else {
+				float t2 = (elapsed - halfDuration) / halfDuration;
+
+				dof.focalLength.value = Mathf.Lerp(focalMid, focalEnd, t2);
+
+				colorAdj.colorFilter.value = Color.Lerp(colorMid, colorEnd, t2);
+			}
+
+			yield return null;
+		}
+		dof.focalLength.value = focalEnd;
+		colorAdj.colorFilter.value = colorEnd;
+	}
+#endregion
 } 
