@@ -19,7 +19,7 @@ public class LightsOnManager : MonoBehaviour
 	[Header("Settings/General")]
 	[SerializeField] private Volume _cameraVolume;
 	[SerializeField] private FPSController _characterController;
-	[SerializeField] private 
+	[SerializeField] private LigthsOnCanvasManager _canvasScript;
 
 	private int _answerId = 0;
 	private int[] _toggleIds = { 1 , 2, 3 };
@@ -46,7 +46,7 @@ public class LightsOnManager : MonoBehaviour
 
 	private void FixedUpdate() {
 		CheckSwitches();
-		if (_timer >= 55) {
+		if (_timer >= 0) {
 			_timer -= Time.deltaTime;
 			foreach (var timerText in _tntTimer) {
 				timerText.text = System.String.Format("00:{0}",Mathf.Ceil(_timer).ToString());
@@ -191,6 +191,7 @@ public class LightsOnManager : MonoBehaviour
 
 	private void Death() {
 		_characterController.Death();
+		_canvasScript.Death();
 		StartCoroutine(Explosion());
 		StartCoroutine(CameraEffects());
 	}

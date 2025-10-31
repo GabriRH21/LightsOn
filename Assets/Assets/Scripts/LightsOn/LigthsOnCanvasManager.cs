@@ -5,6 +5,7 @@ public class LigthsOnCanvasManager : MonoBehaviour
 {
 	[Header("UI")] 
 	[SerializeField] private TextMeshProUGUI _interactMessage;
+	[SerializeField] private Canvas _canvas;
 
 	private void Awake() {
 		LightsOnEvents.OnShowInteractMessage += ShowInteractMessage;
@@ -18,5 +19,10 @@ public class LigthsOnCanvasManager : MonoBehaviour
 		}
 		_interactMessage.text = message;
 	}
+
+	public void Death()
+    {
+        _canvas.gameObject.SetActive(false);
+    }
 
 } 
