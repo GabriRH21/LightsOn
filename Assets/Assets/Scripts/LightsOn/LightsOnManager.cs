@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class LightsOnManager : MonoBehaviour
 	[SerializeField] private Transform _smoke;
 	[SerializeField] private Transform _light;
 	[SerializeField] private TextMeshPro[] _tntTimer;
+	[SerializeField] private Transform[] _explosionEffects;
 
 	private int _answerId = 0;
 	private int[] _toggleIds = { 1 , 2, 3 };
@@ -14,6 +16,7 @@ public class LightsOnManager : MonoBehaviour
 	private bool[] _toggleOn = { false, false, false };
 	private bool _cheatSolution = false;
 	private bool _FinalQuest = false;
+	private bool _endGame = false;
 	private float _timer = 60;
 
 	private void Awake() {
@@ -23,18 +26,21 @@ public class LightsOnManager : MonoBehaviour
 		_answerId = _toggleIds[UnityEngine.Random.Range(0, _toggleIds.Length)];
 		_light.gameObject.SetActive(false);
 		_smoke.gameObject.SetActive(false);
+		foreach(var exp in _explosionEffects) {
+			exp.gameObject.SetActive(false);
+		}
 	}
 
-	private void Update() {
+	private void FixedUpdate() {
 		CheckSwitches();
-		if (_timer >= 0) {
+		if (_timer >= 50) {
 			_timer -= Time.deltaTime;
 			foreach (var timerText in _tntTimer) {
 				timerText.text = System.String.Format("00:{0}",Mathf.Ceil(_timer).ToString());
 			}
-		} else {
-			//Lose
-			Debug.Log("Derrota");
+		} else if (!_endGame){
+			_endGame = true;
+			StartCoroutine(Explosion());
 		}
 	}
 
@@ -49,7 +55,7 @@ public class LightsOnManager : MonoBehaviour
 			if (Id == _answerId && !_cheatSolution) {
 				Debug.Log("Victoria");
 			} else {
-				Debug.Log("Derrota");
+				StartCoroutine(Explosion());
 			}
 		}
 	}
@@ -166,5 +172,12 @@ public class LightsOnManager : MonoBehaviour
 
 	private void ActivateFinalSelection() {
 		_FinalQuest = true;
+	}
+
+	private IEnumerator Explosion() {
+		foreach(var exp in _explosionEffects) {
+			exp.gameObject.SetActive(true);
+			yield return new WaitForSeconds(0.1f);
+		}
 	}
 } 

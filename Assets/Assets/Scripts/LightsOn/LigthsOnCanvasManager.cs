@@ -5,7 +5,6 @@ public class LigthsOnCanvasManager : MonoBehaviour
 {
 	[Header("UI")] 
 	[SerializeField] private TextMeshProUGUI _interactMessage;
-	[SerializeField] private TextMeshProUGUI _Seconds;
 
 	private float _realSeconds = 60;
 
