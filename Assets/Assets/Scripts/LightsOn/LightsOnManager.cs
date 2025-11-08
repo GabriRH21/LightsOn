@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
 public class LightsOnManager : MonoBehaviour
 {
@@ -248,7 +249,7 @@ public class LightsOnManager : MonoBehaviour
 		dof.focalLength.value = focalEnd;
 		colorAdj.colorFilter.value = colorEnd;
 		yield return new WaitForSeconds(1.5f);
-		// ToDo: Change Scene to loser one
+		SceneManager.LoadScene("LoserScene");
 	}
 #endregion
 } 
