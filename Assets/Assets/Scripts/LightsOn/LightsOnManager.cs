@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -22,6 +23,10 @@ public class LightsOnManager : MonoBehaviour
 	[SerializeField] private FPSController _characterController;
 	[SerializeField] private LigthsOnCanvasManager _canvasScript;
 
+	[Space]
+	[Header("Canvas Stuff")]
+	[SerializeField] 
+
 	private int _answerId = 0;
 	private int[] _toggleIds = { 1 , 2, 3 };
 	private float[] _toggleOnTime = { 0f, 0f, 0f };
@@ -43,7 +48,23 @@ public class LightsOnManager : MonoBehaviour
 			exp.gameObject.SetActive(false);
 		}
 		_cameraVolume.gameObject.SetActive(false);
+
+		CheckIfTutorialNeeded();
 	}
+
+#region Tutorial
+	private void CheckIfTutorialNeeded() {
+		if (!GlobalScript.HasChoicesMade(ChoicesMade.TutorialDone)) {
+			GlobalScript.MarkChoicesMade(ChoicesMade.TutorialDone);
+			StartCoroutine(StartTutorial());
+		}
+	}
+
+	private IEnumerator StartTutorial() {
+
+		yield return new WaitForSeconds(0);
+	}
+#endregion
 
 	private void FixedUpdate() {
 		CheckSwitches();
