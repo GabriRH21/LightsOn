@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LightsOnManager : MonoBehaviour
 {
@@ -27,12 +28,16 @@ public class LightsOnManager : MonoBehaviour
 	[Space]
 	[Header("Canvas Stuff")]
 	[SerializeField] private TextMeshProUGUI _tutorialTextLeftUp;
+	[SerializeField] private Canvas _pauseCanvas;
+	[SerializeField] private Button _exitButton;
+	[SerializeField] private Button _resumeButton;
 	//[SerializeField] private
 
 	private int _answerId = 0;
 	private int[] _toggleIds = { 1 , 2, 3 };
 	private float[] _toggleOnTime = { 0f, 0f, 0f };
 	private bool[] _toggleOn = { false, false, false };
+	private bool _pause = false;
 	private bool _cheatSolution = false;
 	private bool _FinalQuest = false;
 	private bool _endGame = false;
@@ -43,6 +48,7 @@ public class LightsOnManager : MonoBehaviour
 		LightsOnEvents.PrepareSolution += PrepareSolution;
 		LightsOnEvents.FinalQuest += ActivateFinalSelection;
 		_answerId = _toggleIds[UnityEngine.Random.Range(0, _toggleIds.Length)];
+		_pauseCanvas.gameObject.SetActive(false);
 
 		_light.gameObject.SetActive(false);
 		_smoke.gameObject.SetActive(false);
@@ -52,6 +58,7 @@ public class LightsOnManager : MonoBehaviour
 		_cameraVolume.gameObject.SetActive(false);
 
 		CheckIfTutorialNeeded();
+		Cursor.visible = false;
 	}
 
 #region Tutorial
@@ -76,17 +83,48 @@ public class LightsOnManager : MonoBehaviour
 #endregion
 
 	private void FixedUpdate() {
+		if(Input.GetKeyDown(KeyCode.Escape)) {
+			DisplayPauseMenu();
+		}
 		CheckSwitches();
 		if (_timer >= 0) {
-			_timer -= Time.deltaTime;
-			foreach (var timerText in _tntTimer) {
-				timerText.text = System.String.Format("00:{0}",Mathf.Ceil(_timer).ToString());
+			if (!_pause) {
+				_timer -= Time.deltaTime;
+				foreach (var timerText in _tntTimer) {
+					timerText.text = System.String.Format("00:{0}",Mathf.Ceil(_timer).ToString());
+				}
 			}
 		} else if (!_endGame){
 			_endGame = true;
 			Death();
 		}
 	}
+
+#region Pause
+	private void DisplayPauseMenu()  {
+		Cursor.visible = true;
+		_characterController.CanMove(false);
+		_pauseCanvas.gameObject.SetActive(true);
+		_pause = true;
+
+		_exitButton.onClick.AddListener(OnExitButton);
+		_resumeButton.onClick.AddListener(ResumeGame);
+	}
+
+	private void ResumeGame() {
+		_exitButton.onClick.RemoveAllListeners();
+		_resumeButton.onClick.RemoveAllListeners();
+
+		Cursor.visible = false;
+		_pauseCanvas.gameObject.SetActive(false);
+		_characterController.CanMove(true);
+		_pause = false;
+	}
+
+	private void OnExitButton() {
+		SceneManager.LoadScene("StartScene");
+	}
+#endregion Pause
 
 	public void SwitchPressed(int Id, bool isOn) {
 		if (!_FinalQuest) {
@@ -279,6 +317,7 @@ public class LightsOnManager : MonoBehaviour
 		dof.focalLength.value = focalEnd;
 		colorAdj.colorFilter.value = colorEnd;
 		yield return new WaitForSeconds(1.5f);
+		Cursor.visible = true;
 		SceneManager.LoadScene("LoserScene");
 	}
 #endregion
