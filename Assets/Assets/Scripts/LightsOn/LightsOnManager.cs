@@ -22,10 +22,12 @@ public class LightsOnManager : MonoBehaviour
 	[SerializeField] private Volume _cameraVolume;
 	[SerializeField] private FPSController _characterController;
 	[SerializeField] private LigthsOnCanvasManager _canvasScript;
+	[SerializeField] private Transform[] _tutorialPoints;
 
 	[Space]
 	[Header("Canvas Stuff")]
-	[SerializeField] 
+	[SerializeField] private TextMeshProUGUI _tutorialTextLeftUp;
+	//[SerializeField] private
 
 	private int _answerId = 0;
 	private int[] _toggleIds = { 1 , 2, 3 };
@@ -61,9 +63,16 @@ public class LightsOnManager : MonoBehaviour
 	}
 
 	private IEnumerator StartTutorial() {
+		_characterController.CanMove(false);
 
 		yield return new WaitForSeconds(0);
+
+		_characterController.CanMove(true);
 	}
+
+	/*private IEnumerator MoveFromTo(Vector3 start, Vector3 end) {
+		
+	}*/
 #endregion
 
 	private void FixedUpdate() {

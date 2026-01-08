@@ -25,6 +25,7 @@ public class FPSController : MonoBehaviour
 	[Header("Others")]
 	[SerializeField] private Rigidbody _rb;
 	private float _hMouse, _vMouse;
+	private bool _canMove = true;
 	
 
 	void Awake() {
@@ -32,29 +33,35 @@ public class FPSController : MonoBehaviour
 	}
 
 	void Update() {
-		_hMouse = _mouseHorizontal * Input.GetAxis("Mouse X");
-		_vMouse += _mouseVertical * Input.GetAxis("Mouse Y");
+		if (_canMove) {
+			_hMouse = _mouseHorizontal * Input.GetAxis("Mouse X");
+			_vMouse += _mouseVertical * Input.GetAxis("Mouse Y");
 
-		_vMouse = Mathf.Clamp(_vMouse, _minRotation, _maxRotation);
-		cam.transform.localEulerAngles = new UnityEngine.Vector3(-_vMouse, 0, 0);
-		transform.Rotate(0, _hMouse, 0);
+			_vMouse = Mathf.Clamp(_vMouse, _minRotation, _maxRotation);
+			cam.transform.localEulerAngles = new UnityEngine.Vector3(-_vMouse, 0, 0);
+			transform.Rotate(0, _hMouse, 0);
 
-		if (_characterController.isGrounded)
-		{
-			move = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
-			if (Input.GetKeyDown(KeyCode.LeftShift)) {
-				move = transform.TransformDirection(move) * _runSpeed;
-			} else {
-				move = transform.TransformDirection(move) * _walkSpeed;
+			if (_characterController.isGrounded)
+			{
+				move = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
+				if (Input.GetKeyDown(KeyCode.LeftShift)) {
+					move = transform.TransformDirection(move) * _runSpeed;
+				} else {
+					move = transform.TransformDirection(move) * _walkSpeed;
+				}
 			}
-		}
 
-		move.y -= _gravity * Time.deltaTime;
-		_characterController.Move(move * Time.deltaTime);
+			move.y -= _gravity * Time.deltaTime;
+			_characterController.Move(move * Time.deltaTime);
+		}
 	}
 
 	public void Death() {
 		_rb.constraints = RigidbodyConstraints.None;
 		this.enabled = false;
+	}
+
+	public void CanMove(bool condition) {
+		_canMove = condition;
 	}
 }
