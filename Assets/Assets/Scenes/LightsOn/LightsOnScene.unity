@@ -5472,6 +5472,7 @@ MonoBehaviour:
   _cameraVolume: {fileID: 1931804218}
   _characterController: {fileID: 1658826851}
   _canvasScript: {fileID: 551394890}
+  _tutorialPoints: []
   _tutorialTextLeftUp: {fileID: 0}
 --- !u!1 &560454005
 GameObject:
@@ -11364,7 +11365,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1518103893
 RectTransform:
   m_ObjectHideFlags: 0
