@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class GlobalScript
 {
-	public static List<ChoicesMade> ChoicesMade { get; private set; }
+	public static List<ChoicesMade> ChoicesMade { get; private set; } = new List<ChoicesMade>();
 	public static void MarkChoicesMade(ChoicesMade choiceToMark) {
 		if (!ChoicesMade.Contains(choiceToMark)) {
 			ChoicesMade.Add(choiceToMark);
