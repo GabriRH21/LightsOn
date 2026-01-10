@@ -82,10 +82,13 @@ public class LightsOnManager : MonoBehaviour
 	}*/
 #endregion
 
-	private void FixedUpdate() {
+	private void Update() {
 		if(Input.GetKeyDown(KeyCode.Escape)) {
 			DisplayPauseMenu();
 		}
+	}
+
+	private void FixedUpdate() {
 		CheckSwitches();
 		if (_timer >= 0) {
 			if (!_pause) {

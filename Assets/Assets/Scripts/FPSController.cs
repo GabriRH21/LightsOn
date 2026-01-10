@@ -22,10 +22,15 @@ public class FPSController : MonoBehaviour
 	[SerializeField] private float _maxRotation = 60.0f;
 
 	[Space]
+	[SerializeField] private AudioClip[] _steps;
+	[SerializeField] private AudioSource _audioSource;
+
+	[Space]
 	[Header("Others")]
 	[SerializeField] private Rigidbody _rb;
 	private float _hMouse, _vMouse;
 	private bool _canMove = true;
+	private float _stepTime = 0f;
 	
 
 	void Awake() {
@@ -49,10 +54,27 @@ public class FPSController : MonoBehaviour
 				} else {
 					move = transform.TransformDirection(move) * _walkSpeed;
 				}
+
+				if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+				{
+					PlaySteps();
+				}
+				
 			}
 
 			move.y -= _gravity * Time.deltaTime;
 			_characterController.Move(move * Time.deltaTime);
+		}
+	}
+
+	public void PlaySteps() {
+		_stepTime += Time.deltaTime;
+				
+		if (_stepTime >= 0.5) {
+			_stepTime = 0;
+			AudioClip newClip = _steps[UnityEngine.Random.Range(0, _steps.Length)];
+			_audioSource.clip = newClip;
+			_audioSource.Play();
 		}
 	}
 
